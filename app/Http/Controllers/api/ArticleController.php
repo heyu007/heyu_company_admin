@@ -16,7 +16,10 @@ class ArticleController extends Controller
      */
     public function articleList()
     {
-        $result = Article::query()->paginate(1);
+        $result = Article::query()->paginate(1)->toArray();
+        foreach($result['data'] as $key=>&$val){
+           $val['reply'] = ArticleReply::query()->where(['article_id'=>$val['id']])->count();
+        }
         return $this->response($result);
     }
 
@@ -99,5 +102,15 @@ class ArticleController extends Controller
         }else{
             return $this->response([], '操作失败', '400', 0);
         }
+    }
+
+    /**
+     * 文章排行榜
+     * @return array
+     */
+    public function articleRank()
+    {
+        $result = Article::query()->orderBy('hit','desc')->limit(10)->get(['id','title']);
+        return $this->response($result);
     }
 }
