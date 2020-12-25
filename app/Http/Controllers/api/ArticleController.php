@@ -11,14 +11,29 @@ use Illuminate\Support\Facades\DB;
 class ArticleController extends Controller
 {
     /**
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function addArticle(Request $request)
+    {
+        $param                = $request->post();
+        $param['create_time'] = time();
+        $param['time_slot']   = $param['startDate'] . ',' . $param['endDate'];
+        $param['industry_id'] = $param['industry'];
+        $result               = Article::query()->create($param);
+        return $this->response($result);
+    }
+
+    /**
      * 文章列表
      * @return array
      */
     public function articleList()
     {
-        $result = Article::query()->paginate(1)->toArray();
-        foreach($result['data'] as $key=>&$val){
-           $val['reply'] = ArticleReply::query()->where(['article_id'=>$val['id']])->count();
+        $result = Article::query()->orderBy('created_time','desc')->paginate(1)->toArray();
+        foreach ($result['data'] as $key => &$val) {
+            $val['reply'] = ArticleReply::query()->where(['article_id' => $val['id']])->count();
         }
         return $this->response($result);
     }
@@ -97,9 +112,9 @@ class ArticleController extends Controller
         if (empty($params['content']) || empty($params['article_id'])) return $this->response([], '回复内容不能为空', '400', 0);
         $params['create_time'] = time();
         $result                = ArticleReply::query()->create($params);
-        if(!empty($result)){
+        if (!empty($result)) {
             return $this->response($result);
-        }else{
+        } else {
             return $this->response([], '操作失败', '400', 0);
         }
     }
@@ -110,7 +125,7 @@ class ArticleController extends Controller
      */
     public function articleRank()
     {
-        $result = Article::query()->orderBy('hit','desc')->limit(10)->get(['id','title']);
+        $result = Article::query()->orderBy('hit', 'desc')->limit(10)->get(['id', 'title', 'hit']);
         return $this->response($result);
     }
 }

@@ -12,7 +12,7 @@ class Article extends Model
     protected $table = 'article';
     const CREATED_AT = 'created_time';
     const UPDATED_AT = 'updated_time';
-
+    protected $fillable = ['title','content','label','time_slot','industry_id','location','create_time'];
     public function reply(){
         return $this->hasMany(ArticleReply::class)->orderBy('hit','desc');
     }
