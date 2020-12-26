@@ -31,7 +31,7 @@ class ArticleController extends Controller
      */
     public function articleList()
     {
-        $result = Article::query()->orderBy('created_time','desc')->paginate(1)->toArray();
+        $result = Article::query()->orderBy('created_time','desc')->paginate(10)->toArray();
         foreach ($result['data'] as $key => &$val) {
             $val['reply'] = ArticleReply::query()->where(['article_id' => $val['id']])->count();
         }

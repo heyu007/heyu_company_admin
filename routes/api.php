@@ -6,6 +6,7 @@ use App\Http\Controllers\api\ArticleController;
 use App\Http\Controllers\api\NoticeController;
 use App\Http\Controllers\api\LabelController;
 use App\Http\Controllers\api\IndustryController;
+use App\Http\Controllers\api\CommonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,3 +40,6 @@ Route::middleware('api')->get('/label',[LabelController::class,'indexLabel']); /
 
 // 行业
 Route::middleware('api')->get('industry',[IndustryController::class,'indexIndustry']); // 行业全部列表
+
+// 公共组
+Route::middleware('api')->post('weather',[CommonController::class,'weather']); // 天气
